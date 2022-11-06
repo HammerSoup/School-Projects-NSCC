@@ -1,0 +1,463 @@
+#!/bin/bash
+
+<<DISCRIP
+AUTH: Matteo L.
+NAME: IN_SS/Internet_shitshow
+DESC: causes a bunch of random trafic stuff to target ip/lots of random traffic
+DATE: 2/11/2021
+DISCRIP
+
+#
+#ip address of target machine
+#please make sure to select the correct ip!!!
+TARGET_IP=""
+
+#
+#please set a value to MIN and MAX
+#examples EXEC_TIME_MIN=2 EXEC_TIME_MAX=5 this will run between a time of  2mins to 5mins
+EXEC_TIME_MIN=0
+EXEC_TIME_MAX=10
+
+#
+#when a option is selected this will perform them between a selected range example...
+#CONNECTION_MIN=2 and CONNECTION_MAX=5, then it will randomly select a range between 2 to 5 connections to make
+CONNECTION_MIN=1
+CONNECTION_MAX=10
+
+#
+#will perfom a random thing based on what is turned on
+#NMAP settings
+NM_DISCOVERY_scan="yes"
+NM_TCP_scan="yes"
+NM_UDP_scan="yes"
+NM_SIN_scan="yes"
+NM_TOP_MOST_COMMON_PORTS="yes"
+NM_SERVICE_VERSION="yes"
+NM_EVERYTHING_scan="yes"
+NM_TREAT_ALL_AS_ONLINE="yes"
+NM_XMAS_scan="yes"
+NM_NULL_scan="yes"
+NM_ALL_port_scan="yes"
+NM_FIN_scan="yes"
+
+#
+#NPING settings
+NPING_IMCP_pings="yes"
+NPING_TCP_RANDO_PORT="yes"
+NPING_TCPCONNECT_RANDO_PORT="yes"
+NPING_UDP_RANDO_PORT="yes"
+NPING_ARP_PING="yes"
+
+#
+#ping settings
+JUST_PINGS="yes"
+
+
+
+function PORT_RANDO
+{
+number=$(( $RANDOM % 32767 + 1 ))
+echo $number
+}
+
+function NM_speed()
+{
+until [[ $finalsec -ge 3 && $finalsec -le 5 ]]; do
+finalsec=$(( $RANDOM % 5 + 3  ))
+done
+echo $finalsec
+}
+
+function DATE_AND_TIME()
+{
+{
+        DATES=$(date `'+%h %d %Y %T'`)
+        echo
+        echo "##############################################################"
+        echo "CONNECTION WAS MADE ON"
+        echo "##############################################################"
+        echo "$DATES"
+        echo "##############################################################"
+} 2>> logs/ERRORS.log
+}
+
+function TIME_AND_CONNECT()
+{
+{
+until [ $finaltimeandconnection -le $2 ]; do
+        finaltimeandconnection=$(( $RANDOM % $2 + $1 ))
+        if [ $finaltimeandconnection -le $2 ]; then
+                var=$finaltimeandconnection
+                echo $var
+        fi
+done
+} 2> ./logs/ERRORS.log
+}
+
+function RANDO()
+{
+finalselection=$(( $RANDOM % 18 + 1 ))
+echo $finalselection
+}
+
+function SEC()
+{
+finalsec=$(( $RANDOM % 60 + 1  ))
+echo $finalsec
+}
+
+mkdir logs 2> /dev/null
+
+until [[ $EXIT1 = 0 ]]; do
+        NMAP_speed=$(NM_speed)
+	RANDO_NUM=$(PORT_RANDO)
+
+	if [[ $EXEC_TIME_MIN = 0 && $EXEC_TIME_MAX = 1 ]]; then
+		RANDOM_SELECTION_VALUE=$(RANDO)
+		CONNECTION_VALUE=$(TIME_AND_CONNECT $CONNECTION_MIN $CONNECTION_MAX)
+		SCANEDAMOUNT=0
+		SLEEPAMOUNT_MIN=0
+                SLEEPAMOUNT_SEC=$(SEC)
+
+	else
+		EXEC_TIME_MAX1=$(( $EXEC_TIME_MAX - 1 ))
+		RANDOM_SELECTION_VALUE=$(RANDO)
+		CONNECTION_VALUE=$(TIME_AND_CONNECT $CONNECTION_MIN $CONNECTION_MAX)
+		TIMER_VALUE=$(TIME_AND_CONNECT $EXEC_TIME_MIN $EXEC_TIME_MAX1)
+		SCANEDAMOUNT=0
+		SLEEPAMOUNT_MIN=$(($TIMER_VALUE + 1))
+		SLEEPAMOUNT_SEC=$(SEC)
+		if [ $EXEC_TIME_MIN -ge 1 ]; then
+			SLEEPAMOUNT_MIN=$(($TIMER_VALUE))
+		fi
+
+		if [[ $EXEC_TIME_MIN = 0 && $SLEEPAMOUNT_MIN = 1 ]]; then
+        		DRAW=$(( $RANDOM % 3 + 1 ))
+			if [ $DRAW = 2 ]; then
+				SLEEPAMOUNT_MIN=0
+			elif [ $DRAW = 3 && ]; then
+                	        SLEEPAMOUNT_MIN=$(( $SLEEPAMOUNT_MIN + 2 ))
+			elif [ $DRAW = 1 ]; then
+				SLEEPAMOUNT_MIN=1
+			fi
+		fi
+	fi
+
+	echo
+	echo "CAUTION! NEXT COMMAND WILL RUN IN $SLEEPAMOUNT_MIN MINs AND $SLEEPAMOUNT_SEC SECs"
+	echo "option $RANDOM_SELECTION_VALUE has bin selected"
+	echo "connctions that will execute will be $CONNECTION_VALUE"
+
+	if [ $RANDOM_SELECTION_VALUE = 1 ]; then
+		if [ $NM_DISCOVERY_scan = "yes" ]; then
+			sleep $SLEEPAMOUNT_MIN"m"
+        		sleep $SLEEPAMOUNT_SEC"s"
+			echo "CONNECTION HAS STARTED..."
+			until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+				nmap -sn -T$NMAP_speed $TARGET_IP
+				echo
+				echo
+                                } >> ./logs/NMAP_SCANS.log
+				SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+			done
+			echo "CONNECTION HAS ENDED..."
+		fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 2 ]; then
+                if [ $NM_TCP_scan = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -sT -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 3 ]; then
+                if [ $NM_UDP_scan = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -sU -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 4 ]; then
+                if [ $NM_SIN_scan = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -sS -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 5 ]; then
+                if [ $NM_ALL_port_scan = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -p- -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 6 ]; then
+                if [ $NM_SERVICE_VERSION = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -sV -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 7 ]; then
+                if [ $NM_EVERYTHING_scan = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -A -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 8 ]; then
+                if [ $NM_TREAT_ALL_AS_ONLINE = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -Pn -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 9 ]; then
+                if [ $NM_XMAS_scan = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -sX -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 10 ]; then
+                if [ $NM_NULL_scan = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -sN -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 11 ]; then
+                if [ $NM_TOP_MOST_COMMON_PORTS = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 12 ]; then
+                if [ $NM_FIN_scan = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nmap -sF -T$NMAP_speed $TARGET_IP
+                                echo
+                                echo
+                                } >> ./logs/NMAP_SCANS.log
+                                SCANEDAMOUNT=$((SCANEDAMOUNT+1))
+                        done
+                        echo "CONNECTION HAS ENDED..."
+		fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 13 ]; then
+                if [ $NPING_IMCP_pings = "yes" ]; then
+			sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+			echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+				nping --imcp -c $CONNECTION_VALUE $TARGET_IP
+				echo
+				echo
+                                } >> logs/NPING_PACKET_CONNECTIONS.log
+				SCANEDAMOUNT=$CONNECTION_VALUE
+
+                        done
+			echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 14 ]; then
+               if [ $NPING_TCP_RANDO_PORT = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nping --tcp -p$RANDO_NUM -g$RANDO_NUM -c$CONNECTION_VALUE $TARGET_IP
+                                echo
+                                echo
+                                } >> logs/NPING_PACKET_CONNECTIONS.log
+                                SCANEDAMOUNT=$CONNECTION_VALUE
+
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 15 ]; then
+               if [ $NPING_TCPCONNECT_RANDO_PORT = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nping --tcp-connect -p$RANDO_NUM -g$RANDO_NUM -c$CONNECTION_VALUE $TARGET_IP
+                                echo
+                                echo
+                                } >> logs/NPING_PACKET_CONNECTIONS.log
+                                SCANEDAMOUNT=$CONNECTION_VALUE
+
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 16 ]; then
+               if [ $NPING_UDP_RANDO_PORT = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nping --udp -p$RANDO_NUM -g$RANDO_NUM -c$CONNECTION_VALUE $TARGET_IP
+                                echo
+                                echo
+                                } >> logs/NPING_PACKET_CONNECTIONS.log
+                                SCANEDAMOUNT=$CONNECTION_VALUE
+
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 17 ]; then
+               if [ $NPING_ARP_PING = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                nping --arp -c$CONNECTION_VALUE $TARGET_IP
+                                echo
+                                echo
+                                } >> logs/NPING_PACKET_CONNECTIONS.log
+                                SCANEDAMOUNT=$CONNECTION_VALUE
+
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+
+	elif [ $RANDOM_SELECTION_VALUE = 18 ]; then
+               if [ $JUST_PINGS = "yes" ]; then
+                        sleep $SLEEPAMOUNT_MIN"m"
+                        sleep $SLEEPAMOUNT_SEC"s"
+                        echo "CONNECTION HAS STARTED..."
+                        until [ $SCANEDAMOUNT = $CONNECTION_VALUE ]; do
+                                {
+                                DATE_AND_TIME
+                                ping -c$CONNECTION_VALUE $TARGET_IP
+                                echo
+                                echo
+                                } >> logs/JUST_PING_CONNECTIONS.log
+                                SCANEDAMOUNT=$CONNECTION_VALUE
+
+                        done
+                        echo "CONNECTION HAS ENDED..."
+                fi
+        fi
+done
