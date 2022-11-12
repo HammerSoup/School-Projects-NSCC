@@ -1,0 +1,41 @@
+#!/bin/bash
+
+<<DISCRIP
+AUTH: HammerSoup
+DESC: Nmap script
+DATE: 11/4/2021
+DISCRIP
+
+#
+# will place all the ip address you specify into a file 
+{
+for ip in $@; do
+        echo "$ip"
+done
+} > TargetList.txt
+
+#
+# this will take the taget list and perform an nmap scan agenst the list of ip address
+{
+echo "================================================================================================="
+echo "Filename   :  ISEC1005-As3-scan.txt "
+echo "Assignment :  Assignment3 NMAP"
+echo "DATE TAKEN :"
+date "+%h %d %Y %T"
+echo "================================================================================================="
+nmap -A -iL TargetList.txt
+echo "================================================================================================="
+} > ISEC1005-As3-Scan.txt
+
+#
+# when the scan has finshed it will display this 
+echo ""
+echo "."
+sleep 1
+echo "."
+sleep 1
+echo "."
+sleep 1
+echo ""
+
+echo "all done hehe"
