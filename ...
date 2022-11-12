@@ -1,0 +1,51 @@
+<!-- this html header tells this file that everything between the two html headers is html code -->
+<html>
+
+<!-- for the head and title headers this will modify the web browsers tab name for this case it will be renamed to 
+Registration Page -->
+<head>
+    <title>Registration Page</title>
+</head>
+
+<!-- this body header is were you put most of the html code that makes up the bulk of the web page as its in the name, 
+its pracrtically the web page itself  -->
+<body>
+
+<!--the h2 header will just modify the size of the page title -->
+    <h2>Registration Page</h2>
+
+<!--the form header will create a form that when the end user submits any action it will be sent to the registration.php 
+file as a post reqest to my databases i made-->
+    <form action="registration.php" method="post">
+
+<!--this is were most of the input is made from, to explain i will be going over the password field
+the first word in the row will discribe the name of the input on the web page
+next, what ever the end user writes into the box is placed into varible called password and sent to the database
+the type just tell you what the input should be in this case its set to text, all input will be read as text  
+the minlength just tells you that there has to be a minimum number of characters in the input box
+finaly the requried field tells you that you cant continue unless all above requirements are met
+also <br /> will create spaces between inputs on the web page
+
+Asing5 entry
+changed the password field type to Password in order to block out the clear text password that is showen on 
+web site same goes for the Confirm password field, next i add the autocomplete option and setted it to new password
+so it prevent auto filling of passwords when you start a webpage  -->
+        First name: <input name="firstname" type="text" />
+        <br /><br />
+        Last name: <input name="lastname" type="text" />
+        <br /><br />
+        Username: <input name="username" type="text" />
+        <br /><br />
+        Password: <input name="password" type="password" minlength="8" required autocomplete="new-password" />
+        <br /><br />
+        Confirm password: <input name="confirmpassword" type="password" minlength="8" required autocomplete="new-password" />
+        <br /><br />
+
+<!--this input option will create a butten on the web page, when clicked on and if all reqerments are met it will send the output to 
+the database also since the type is set to submit it will just create a butten that saids CONFIRM TO RECEIVE FREE IPAD!!! -->
+        <input name="Submit" type="submit" value="CONFIRM TO RECEIVE FREE IPAD!!!" />
+
+</body>
+
+<!-- this html header tells this file that everything between the two html headers is html code -->
+</html>
