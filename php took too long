@@ -1,0 +1,32 @@
+#!/bin/bash
+
+<<DISCRIP
+AUTH: HammerSoup
+NAME: php took too long
+DESC: does the entire assignment were i have to have damn vulnerable web application up and running
+DATE: 1/29/2021
+DISCRIP
+
+apt update -y
+apt upgrade -y
+apt install apache2 -y
+apt-get install git -y
+git clone https://github.com/ethicalhack3r/DVWA.git /var/www/html/DVWA
+chmod -R 777 /var/www/html/DVWA
+apt install mysql-server -y
+sudo mysqladmin -u root password notapassword
+mysql -u root -e "CREATE DATABASE dvwadb";
+mysql -u root -e "CREATE USER 'notmatteo'@'127.0.0.1' IDENTIFIED BY 'notapassword'";
+mysql -u root -e "GRANT ALL PRIVILEGES ON dvwadb.* TO 'notmatteo'@'127.0.0.1'";
+apt install php -y
+apt install php-mysql -y
+echo "<?php phpinfo();?>" > /var/www/html/info.php
+mv /var/www/html/DVWA/ /var/www/html/dvwa
+sed -i -z 's/dvwa/dvwadb/' /var/www/html/dvwa/config/config.inc.php.dist
+sed -i -z 's/dvwa/notmatteo/2' /var/www/html/dvwa/config/config.inc.php.dist
+sed -i -z 's/p@ssw0rd/notapassword/' /var/www/html/dvwa/config/config.inc.php.dist
+sed -i -z 's/impossible/low/3' /var/www/html/dvwa/config/config.inc.php.dist
+cp /var/www/html/dvwa/config/config.inc.php.dist /var/www/html/dvwa/config/config.inc.php
+sed -i '861s/allow_url_include = Off/allow_url_include = on/' /etc/php/7.4/apache2/php.ini
+systemctl restart apache2.service
+systemctl restart mysql.service
