@@ -1,0 +1,119 @@
+#!/bin/bash
+
+#
+#
+clear
+echo WELCOME TO THE SCP FOUNDATION!
+echo any use of this script
+echo without authorization will
+echo be delt with ON THE SPOT!
+echo ctrl C to cancel
+sleep 10
+clear
+echo please wait
+echo getting information
+sleep 1
+echo .
+sleep 1
+echo .
+sleep 1
+echo .
+sleep 1
+echo
+
+#
+#
+rm /home/ml/bin/osys2022_assign2_output.txt
+mkdir /home/ml/bin
+sleep 1
+
+{
+#
+#for this i made 6 (echo)'s just to print spaces and make a section title, i used the command (uname -a) to show me all the kurnal information
+echo
+echo "#############################################################################################"
+echo "################################## KERNEL INFORMATION ##################### SCP Foundation ##"
+echo "#############################################################################################"
+echo
+uname -a
+echo
+
+#
+#for this i made 6 (echo)'s just to print spaces and make a section title, i used the command (free -m) to show me the RAM informaion
+echo
+echo "#############################################################################################"
+echo "#################################### RAM INFORMATION ###################### SCP Foundation ##"
+echo "#############################################################################################"
+echo
+free -m
+echo
+
+#
+#for this i made 6 (echo)'s just to print spaces and make a section title, i used the command (dr) to show me all the available storage on the system.
+echo
+echo "#############################################################################################"
+echo "################################## FREE STORAGE SPACE  #################### SCP Foundation ##"
+echo "#############################################################################################"
+echo
+df
+echo
+
+#
+#for this i made 6 (echo)'s just to print spaces and make a section title, for this i used the command (ps aux) to show me all the current processes on the machine.
+#next i sorted them by memory with the command (--sort -%mem) then i piped it to another command called (head) to show me only the 5 top processes.
+echo
+echo "#############################################################################################"
+echo "############################ TOP 5 PROCESSES UTILIZING MEMORY  ############ SCP Foundation ##"
+echo "#############################################################################################"
+echo
+ps aux --sort -%mem | head -n 6
+echo
+} > /home/ml/bin/osys2022_assign2_output.txt
+cat /home/ml/bin/osys2022_assign2_output.txt
+
+
+sleep 2
+echo LOADING USER
+sleep 1
+echo .
+sleep 1
+echo .
+sleep 1
+echo .
+sleep 1
+echo .
+sleep 1
+echo .
+sleep 1
+echo
+echo "all information for this script will be sent to../home/ml/bin"
+echo Have A Nice Day
+echo SCP PERSONNEL
+whoami
+{
+echo "##############################################################################################"
+echo "########     ####     ###      ###############################################################"
+echo "#######  #######  #######  ###  ##############################################################"
+echo "#######      ###  #######      ############## SECURE # CONTAIN # PROTECT #####################"
+echo "###########  ###  #######  ###################################################################"
+echo "#######     #####     ###  ###################################################################"
+echo "##############################################################################################"
+echo
+} >> /home/ml/bin/osys2022_assign2_output.txt
+sleep 2
+echo
+echo "##############################################################################################"
+sleep 1
+echo "########     ####     ###      ###############################################################"
+sleep 1
+echo "#######  #######  #######  ###  ##############################################################"
+sleep 1
+echo "#######      ###  #######      ############## SECURE # CONTAIN # PROTECT #####################"
+sleep 1
+echo "###########  ###  #######  ###################################################################"
+sleep 1
+echo "#######     #####     ###  ###################################################################"
+sleep 1
+echo "##############################################################################################"
+sleep 1
+echo
